@@ -1,0 +1,36 @@
+{
+    "name": "survos/doc-bundle",
+    "description": "Build Sphinx documentation for a Symfony project",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "docors": [
+        {
+            "name": "Tac Tacelosky",
+            "email": "tacman@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "symfony/config": "^6.1",
+        "symfony/console": "^6.1",
+        "symfony/dependency-injection": "^6.1",
+        "symfony/http-kernel": "^6.1",
+        "symfony/options-resolver": "^6.1",
+        "twig/twig": "^3.4",
+        "symfony/finder": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Survos\\DocBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "^6.1"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.8",
+        "rector/rector": "^0.14.2"
+    }
+}

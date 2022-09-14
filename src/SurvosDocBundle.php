@@ -5,6 +5,7 @@ namespace Survos\DocBundle;
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
 use Survos\DocBundle\Command\UserCreateCommand;
 use Survos\DocBundle\Controller\ODocController;
+use Survos\DocBundle\EventSubscriber\LoggerSubscriber;
 use Survos\DocBundle\Services\BaseService;
 use Survos\DocBundle\Twig\TwigExtension;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -47,6 +48,14 @@ class SurvosDocBundle extends AbstractBundle
             ->setArgument('$twig', new Reference('twig'))
             ->addTag('console.command')
         ;
+
+        $definition = $builder->autowire(LoggerSubscriber::class)
+            ->setArgument('$config', $config)
+            ->setArgument('$options', [])
+            ->setArgument('$twig', new Reference('twig'))
+        ;
+        $definition
+            ->addMethodCall('setTwig', [new Reference('twig')]);
 
 
     }

@@ -3,7 +3,7 @@
     "description": "Build Sphinx documentation for a Symfony project",
     "type": "symfony-bundle",
     "license": "MIT",
-    "docors": [
+    "authors": [
         {
             "name": "Tac Tacelosky",
             "email": "tacman@gmail.com"
@@ -11,13 +11,13 @@
     ],
     "require": {
         "php": "^8.1",
-        "symfony/config": "^6.1",
-        "symfony/console": "^6.1",
-        "symfony/dependency-injection": "^6.1",
-        "symfony/http-kernel": "^6.1",
-        "symfony/options-resolver": "^6.1",
+        "symfony/config": "^6.1.0",
+        "symfony/console": "^6.1.0",
+        "symfony/dependency-injection": "^6.1.0",
+        "symfony/http-kernel": "^6.1.0",
+        "symfony/options-resolver": "^6.1.0",
         "twig/twig": "^3.4",
-        "symfony/finder": "^6.1"
+        "symfony/finder": "^6.1.0"
     },
     "autoload": {
         "psr-4": {
@@ -26,12 +26,12 @@
     },
     "extra": {
         "symfony": {
-            "require": "^6.1"
+            "require": "^6.1.0"
         }
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
-        "rector/rector": "^0.14.2",
+        "rector/rector": "^0.13.9",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
         "codeception/module-doctrine2": "^3.0",

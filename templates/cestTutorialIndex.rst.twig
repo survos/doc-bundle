@@ -1,0 +1,14 @@
+.. This file was automatically generated from {{ _self }} -- do not modify it except to change the relevant twig file!
+
+..  _cest_tutorials:
+
+{{ h('%s Tutorial'|format('CEST'), 2) }}
+
+Generated from CodeCeption
+
+.. toctree::
+    :maxdepth: 1
+
+{% for test in tests %}
+    /../_tutorials/{{ fileMap[test.metadata.filename] }}
+{% endfor %}

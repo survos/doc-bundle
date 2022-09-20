@@ -14,6 +14,7 @@ use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Module\Symfony;
 use Codeception\Step;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 
@@ -87,13 +88,13 @@ class LoggerSubscriber  extends Extension implements EventSubscriberInterface //
         $target = preg_replace('{/platform/tests/functional/(.*?)Cest.php}', '/documentation/_tutorials/$1.rst', $source);
         $rstCode = basename($target, '.rst');
         $this->fileMap[$source] = $rstCode;
-        if (count($this->steps)) {
-            dd($source, $rstCode, $this->steps);
-        }
-        return;
+        assert(count($this->steps), "No steps defined.");
+//        if (count($this->steps)) {
+//            dd($source, $rstCode, $this->steps);
+//        }
         // possible to use $meta->getService() to get twig??
         $twig = $this->getTwig();
-        $rst = $twig->render('AdHocBundle::TutorialTestSteps.rst.twig', [
+        $rst = $twig->render('SurvosDocBundle::TutorialTestSteps.rst.twig', [
             'test' => $e->getTest(),
             'rstCode' => $rstCode,
             'steps' => $this->steps
@@ -104,7 +105,7 @@ class LoggerSubscriber  extends Extension implements EventSubscriberInterface //
             mkdir($targetDir, 0777, true);
         }
         file_put_contents($target, $rst);
-        echo sprintf("%s  written (%s).\n", $target, $rstCode);
+//        echo sprintf("%s  written (%s).\n", $target, $rstCode);
         // dump($meta);
         array_push($this->tests, $e->getTest());
         $this->steps = [];
@@ -159,7 +160,9 @@ class LoggerSubscriber  extends Extension implements EventSubscriberInterface //
         // dump the list of tutorials
 
         $twig = $this->getTwig();
-        $rst = $twig->render('AdHocBundle::cestTutorialIndex.rst.twig', [
+
+        // @todo: get templates from /home/tac/survos/projects/monorepo/platform/src/AdHocBundle/Resources/views
+        $rst = $twig->render('SurvosDocBundle::cestTutorialIndex.rst.twig', [
             'fileMap' => $this->fileMap,
             'tests' => $this->tests,
             'suite' => $e->getSuite()
@@ -169,7 +172,6 @@ class LoggerSubscriber  extends Extension implements EventSubscriberInterface //
         // render rst file
         $target = preg_replace('{/platform/tests/functional/}', '/documentation/_tutorials/cest_index.rst', $source);
         file_put_contents($target, $rst);
-        echo $target . ' written.';
 
         // dump($e); die();
     }

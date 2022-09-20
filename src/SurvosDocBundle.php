@@ -3,10 +3,7 @@
 namespace Survos\DocBundle;
 
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
-use Survos\DocBundle\Command\UserCreateCommand;
-use Survos\DocBundle\Controller\ODocController;
 use Survos\DocBundle\EventSubscriber\LoggerSubscriber;
-use Survos\DocBundle\Services\BaseService;
 use Survos\DocBundle\Twig\TwigExtension;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,16 +20,6 @@ class SurvosDocBundle extends AbstractBundle
     /** @param array<mixed> $config */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-//        $serviceId = 'survos_doc.base_service';
-//        $container->services()->alias(BaseService::class, $serviceId);
-//        $builder->autowire($serviceId, BaseService::class)
-//            ->setArgument('$userClass', $config['user_class'])
-//            ->setArgument('$clientRegistry', new Reference('knpu.odoc2.registry'))
-//            ->setArgument('$config', $config)
-////            ->setArgument('$registry', new Reference('doctrine'))
-////            ->setArgument('$provider', new Reference('security.user_providers'))
-//            ->setPublic(true)
-//            ;
 
         $definition = $builder
             ->autowire('survos.doc_twig', TwigExtension::class)

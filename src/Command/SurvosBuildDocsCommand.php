@@ -18,20 +18,20 @@ use Twig\Environment;
 )]
 class SurvosBuildDocsCommand extends Command
 {
-
-    public function __construct(private Environment $twig,
-                                private array $config,
-                                string $name = null)
-    {
+    public function __construct(
+        private Environment $twig,
+        private array $config,
+        string $name = null
+    ) {
         parent::__construct($name);
     }
 
     protected function configure()
     {
         $this
-            ->addArgument('template-dir', InputArgument::OPTIONAL, 'Template Directory',  './templates/')
+            ->addArgument('template-dir', InputArgument::OPTIONAL, 'Template Directory', './templates/')
             ->addArgument('template-subdir', InputArgument::OPTIONAL, 'Template Subdirectory', 'docs/')
-            ->addOption('output-dir', 'o', InputOption::VALUE_OPTIONAL, 'Output Directory (the .rst file)',  './docs')
+            ->addOption('output-dir', 'o', InputOption::VALUE_OPTIONAL, 'Output Directory (the .rst file)', './docs')
         ;
     }
 
@@ -52,7 +52,6 @@ class SurvosBuildDocsCommand extends Command
             file_put_contents($outputFilename, $rst);
             $output->write("$outputFilename written.", true);
         }
-
 
         $io->success('Templates compiled, now run make html');
 

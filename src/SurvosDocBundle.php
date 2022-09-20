@@ -14,21 +14,21 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SurvosDocBundle extends AbstractBundle
 {
-
     protected string $extensionAlias = 'survos_doc';
 
-    /** @param array<mixed> $config */
+    /**
+     * @param array<mixed> $config
+     */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-
         $definition = $builder
             ->autowire('survos.doc_twig', TwigExtension::class)
             ->addTag('twig.extension')
             ->setArgument('$config', $config)
-            ;
+        ;
 
-//        $definition->setArgument('$seed', $config['seed']);
-//        $definition->setArgument('$prefix', $config['function_prefix']);
+        //        $definition->setArgument('$seed', $config['seed']);
+        //        $definition->setArgument('$prefix', $config['function_prefix']);
 
         $builder->autowire(SurvosBuildDocsCommand::class)
             ->setArgument('$config', $config)
@@ -43,8 +43,6 @@ class SurvosDocBundle extends AbstractBundle
         ;
         $definition
             ->addMethodCall('setTwig', [new Reference('twig')]);
-
-
     }
 
     public function configure(DefinitionConfigurator $definition): void
@@ -57,5 +55,4 @@ class SurvosDocBundle extends AbstractBundle
             ->end();
         ;
     }
-
 }

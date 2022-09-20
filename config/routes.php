@@ -16,5 +16,4 @@ return function (RoutingConfigurator $routes) {
         ->controller('survos.doc.odoc_controller::providers')
 
     ;
-
 };

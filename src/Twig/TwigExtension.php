@@ -17,27 +17,20 @@ use function Symfony\Component\String\u;
 class TwigExtension extends AbstractExtension
 {
     public function __construct(
-        private array $config)
-    {
-
+        private array $config
+    ) {
     }
-    /**
-     * {@inheritdoc}
-     */
+
+
     public function getFilters(): array
     {
-
         return [
         ];
     }
 
 
-        /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
-
         return [
             new TwigFunction('rst_h', [$this, 'rstHeader']),
         ];
@@ -54,19 +47,15 @@ class TwigExtension extends AbstractExtension
 “, for paragraphs
          *
          */
-        $levels = [null, '-', '^', '=','*','"'];
+        $levels = [null, '-', '^', '=', '*', '"'];
         return sprintf("%s\n%s\n\n", $text, str_repeat($levels[$level], mb_strlen($text)));
     }
 
     /**
      * add icon and sets target
-     *
      */
-    public function formatExternalLink(string $url, $class=''): string
+    public function formatExternalLink(string $url, $class = ''): string
     {
         return sprintf("<a target='_blank' href='%s'>%s <i class='fas fa-external-link'></i> </a>", $url, $url);
     }
-
-
-
 }

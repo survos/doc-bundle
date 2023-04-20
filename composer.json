@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
-        "rector/rector": "^0.13.9",
+        "rector/rector": "^0.15",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
         "codeception/module-doctrine2": "^3.0",

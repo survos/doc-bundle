@@ -44,16 +44,20 @@ class SurvosBuildDocsCommand extends Command
         $finder = new Finder();
         $finder->files()->in($dir . $subdir);
 
+        $outputDir =  $input->getOption('output-dir');
+        $outputDir = rtrim($outputDir, '/') . '/';
         foreach ($finder as $file) {
             $rst = $this->twig->render($subdir . $file->getBasename(), [
 
             ]);
-            $outputFilename = $input->getOption('output-dir') . $file->getBasename('.twig');
+
+            $outputFilename = $outputDir . $file->getBasename('.twig');
+
             file_put_contents($outputFilename, $rst);
             $output->write("$outputFilename written.", true);
         }
 
-        $io->success('Templates compiled, now run make html');
+        $io->success("Templates compiled, now run cd $outputDir && make html");
 
         return 0;
     }

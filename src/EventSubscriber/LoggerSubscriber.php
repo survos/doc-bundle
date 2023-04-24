@@ -13,14 +13,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-class LoggerSubscriber extends Extension implements EventSubscriberInterface //
+class LoggerSubscriber implements EventSubscriberInterface //  extends Extension
 {
     public function __construct(
         protected array $config = [],
         protected array $options = [],
         protected ?Environment $twig = null,
     ) {
-        parent::__construct($config, $this->options);
+//        parent::__construct($config, $this->options);
     }
 
     public function setTwig(Environment $twig)
@@ -30,16 +30,17 @@ class LoggerSubscriber extends Extension implements EventSubscriberInterface //
 
     public static function getSubscribedEvents(): array
     {
+        return [];
         return self::$events;
     }
 
     public static $events = [
-        Events::SUITE_BEFORE => 'beforeSuite',
-        Events::TEST_BEFORE => 'beforeTest',
-        Events::TEST_END => 'endTest',
-        //        Events::STEP_BEFORE     => 'beforeStep',
-        Events::STEP_AFTER => 'afterStep',
-        Events::SUITE_AFTER => 'afterSuite',
+//        Events::SUITE_BEFORE => 'beforeSuite',
+//        Events::TEST_BEFORE => 'beforeTest',
+//        Events::TEST_END => 'endTest',
+//        //        Events::STEP_BEFORE     => 'beforeStep',
+//        Events::STEP_AFTER => 'afterStep',
+//        Events::SUITE_AFTER => 'afterSuite',
     ];
 
     /**

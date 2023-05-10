@@ -37,8 +37,7 @@ class SurvosDocBundle extends AbstractBundle
         ;
 
         $env = $builder->getParameter("kernel.environment");
-        if (in_array($env, ['test', 'dev']))
-        {
+        if (in_array($env, ['test', 'dev'])) {
             $definition = $builder->autowire(LoggerSubscriber::class)
                 ->setArgument('$config', $config)
                 ->setArgument('$options', [])

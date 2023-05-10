@@ -21,6 +21,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Survos\\GridGroupBundle\\Tests\\": "tests/",
             "Survos\\DocBundle\\": "src/"
         }
     },

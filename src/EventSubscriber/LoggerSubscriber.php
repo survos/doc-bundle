@@ -2,15 +2,18 @@
 
 namespace Survos\DocBundle\EventSubscriber;
 
-use Codeception\Event\StepEvent;
-use Codeception\Event\SuiteEvent;
-use Codeception\Event\TestEvent;
-use Codeception\Events;
-use Codeception\Extension;
-use Codeception\Module\Symfony;
-use Codeception\Step;
+//use Codeception\Event\StepEvent;
+//use Codeception\Event\SuiteEvent;
+//use Codeception\Event\TestEvent;
+//use Codeception\Events;
+//use Codeception\Extension;
+//use Codeception\Module\Symfony;
+//use Codeception\Step;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
+use Behat\Behat\Event\StepEvent;
+
 use Twig\Environment;
 
 class LoggerSubscriber implements EventSubscriberInterface //  extends Extension

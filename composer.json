@@ -33,11 +33,8 @@
     "require-dev": {
         "phpstan/phpstan": "^1.8",
         "rector/rector": "^0.15",
-        "codeception/codeception": "^5.0",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-doctrine2": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-symfony": "^3.0 | *@dev"
+        "behat/behat": "^3.13",
+        "friends-of-behat/symfony-extension": "^2.4"
     },
     "conflict": {
         "survos/maker-bundle": "<1.2.57",

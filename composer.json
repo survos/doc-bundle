@@ -11,23 +11,23 @@
     ],
     "require": {
         "php": "^8.1",
-        "symfony/config": "^6.3 || ^7.0",
-        "symfony/console": "^6.3 || ^7.0",
-        "symfony/dependency-injection": "^6.3 || ^7.0",
-        "symfony/http-kernel": "^6.3 || ^7.0",
-        "symfony/options-resolver": "^6.3 || ^7.0",
+        "symfony/config": "^6.4 || ^7.0",
+        "symfony/console": "^6.4 || ^7.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0",
+        "symfony/http-kernel": "^6.4 || ^7.0",
+        "symfony/options-resolver": "^6.4 || ^7.0",
         "twig/twig": "^3.4",
-        "symfony/finder": "^6.3 || ^7.0"
+        "symfony/finder": "^6.4 || ^7.0"
     },
     "autoload": {
         "psr-4": {
-            "Survos\\GridGroupBundle\\Tests\\": "tests/",
+            "Survos\\DocBundle\\Tests\\": "tests/",
             "Survos\\DocBundle\\": "src/"
         }
     },
     "extra": {
         "symfony": {
-            "require": "^6.3 || ^7.0"
+            "require": "^6.4 || ^7.0"
         }
     },
     "require-dev": {

@@ -21,7 +21,7 @@ class SurvosBuildDocsCommand extends Command
     public function __construct(
         private Environment $twig,
         private array $config,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
     }

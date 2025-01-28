@@ -26,7 +26,7 @@ class SurvosBuildDocsCommand extends Command
         parent::__construct($name);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addArgument('template-dir', InputArgument::OPTIONAL, 'Template Directory', './templates/')
@@ -59,6 +59,6 @@ class SurvosBuildDocsCommand extends Command
 
         $io->success("Templates compiled, now run cd $outputDir && make html");
 
-        return 0;
+        return self::SUCCESS;
     }
 }

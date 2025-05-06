@@ -7,8 +7,8 @@ First, setup Sphinx
 ```bash
 
 sudo apt-get install python3-sphinx
-pip install sphinx_rtd_theme
-pip install sphinx_fontawesome
+pipx install sphinx_rtd_theme
+pipx install sphinx_fontawesome
 ```
 
 ```bash

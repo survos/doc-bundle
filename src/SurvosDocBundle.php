@@ -3,6 +3,7 @@
 namespace Survos\DocBundle;
 
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
+use Survos\DocBundle\Controller\ScreenshotController;
 use Survos\DocBundle\EventSubscriber\LoggerSubscriber;
 use Survos\DocBundle\Twig\TwigExtension;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -21,6 +22,13 @@ class SurvosDocBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        $builder->autowire(ScreenshotController::class)
+            ->setPublic(true)
+            ->setAutowired(true)
+            ->setAutoconfigured(true)
+            ->addTag('controller.service_arguments')
+            ->addTag('controller.service_subscriber');
+
         $definition = $builder
             ->autowire('survos.doc_twig', TwigExtension::class)
             ->addTag('twig.extension')
@@ -43,8 +51,9 @@ class SurvosDocBundle extends AbstractBundle
                 ->setArgument('$options', [])
                 ->setArgument('$twig', new Reference('twig'))
             ;
-            $definition
-                ->addMethodCall('setTwig', [new Reference('twig')]);
+//            dd($definition);
+//            $definition
+//                ->addMethodCall('setTwig', [new Reference('twig')]);
         }
     }
 

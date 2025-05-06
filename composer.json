@@ -17,7 +17,8 @@
         "symfony/http-kernel": "^6.4 || ^7.1",
         "symfony/options-resolver": "^6.4 || ^7.1",
         "twig/twig": "^3.4",
-        "symfony/finder": "^6.4 || ^7.1"
+        "symfony/finder": "^6.4 || ^7.1",
+        "nadar/php-composer-reader": "^2.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",

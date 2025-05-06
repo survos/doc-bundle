@@ -1,0 +1,46 @@
+# {% block title %}{{ title|default('~~') }}{% endblock %}
+
+{% block installation %}
+
+## Installation
+
+```bash
+git clone git@github.com:{{ name }} {{ shortName}} && cd {{ shortName }}
+echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" > .env.local
+echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data_test.db" > .env.test
+composer install
+bin/console doctrine:schema:update --force
+symfony server:start -d
+symfony open:local
+```
+
+{% endblock %}
+
+{% block testing %}
+
+## Running tests
+
+```bash
+bin/console doctrine:schema:update --force --env=test
+bin/console doctrine:fixtures:load -n --env=test
+vendor/bin/phpunit
+```
+
+{% endblock %}
+
+{% block usage %}
+    usage here.
+{% endblock %}
+
+{% block database %}
+## Database
+
+![Database Diagram](assets/db.svg)
+
+{% endblock %}
+
+{% block body %}
+    body here.
+{% endblock %}
+
+*build with survos/doc-bundle*

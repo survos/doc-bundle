@@ -44,17 +44,6 @@ class SurvosDocBundle extends AbstractBundle
             ->addTag('console.command')
         ;
 
-        $env = $builder->getParameter("kernel.environment");
-        if (in_array($env, ['test', 'dev'])) {
-            $definition = $builder->autowire(LoggerSubscriber::class)
-                ->setArgument('$config', $config)
-                ->setArgument('$options', [])
-                ->setArgument('$twig', new Reference('twig'))
-            ;
-//            dd($definition);
-//            $definition
-//                ->addMethodCall('setTwig', [new Reference('twig')]);
-        }
     }
 
     public function configure(DefinitionConfigurator $definition): void

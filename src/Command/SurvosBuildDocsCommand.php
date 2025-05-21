@@ -3,12 +3,10 @@
 namespace Survos\DocBundle\Command;
 
 use Nadar\PhpComposerReader\ComposerReader;
+use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
@@ -19,39 +17,47 @@ use function Symfony\Component\String\u;
     name: 'survos:build-docs',
     description: 'Compile .rst.twig files',
 )]
-class SurvosBuildDocsCommand extends Command
+class SurvosBuildDocsCommand
 {
     public function __construct(
         private Environment $twig,
-        #[Autowire('%kernel.project_dir%')] private string $projectDir,
-        private array $config,
+        #[Autowire('%kernel.project_dir%/')] private string $projectDir,
+        private array $config = [],
         ?string $name = null
     ) {
-        parent::__construct($name);
     }
 
-    protected function configure(): void
+    public function __invoke(
+        SymfonyStyle $io,
+        #[Argument(description: "template dir")] string $templateDir = 'templates/',
+        #[Argument(description: "doc template dir within templates")] string $subdir = 'docs/',
+        #[Option] string $outputDir='./doc',
+    ): int
     {
-        $this
-            ->addArgument('template-dir', InputArgument::OPTIONAL, 'Template Directory', './templates/')
-            ->addArgument('template-subdir', InputArgument::OPTIONAL, 'Template Subdirectory', 'docs/')
-            ->addOption('output-dir', 'o', InputOption::VALUE_OPTIONAL, 'Output Directory (the .rst file)', './doc')
-        ;
-    }
+        $reader = new ComposerReader($this->projectDir . 'composer.json');
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-
-        $reader = new ComposerReader($this->projectDir . '/composer.json');
-
-        $io = new SymfonyStyle($input, $output);
-        $dir = $input->getArgument('template-dir');
-        $subdir = $input->getArgument('template-subdir');
+        $dir = $this->projectDir . $templateDir;
 
         $finder = new Finder();
-        $finder->files()->in($dir . $subdir);
+        // create the doc templates dir if it doesn't exist
+        $dir = $dir . $subdir;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $readmeTemplateFile = $dir . 'README.md.twig';
+        if (!file_exists($readmeTemplateFile)) {
+            if (file_exists($existingReadmeFilename = $this->projectDir . 'README.md')) {
+                $readmeTemplate = '
+{% extends "@SurvosDoc/readme_base.md.twig" %}
+{% block title composer.name %}
+{% block body %}
+' . file_get_contents($existingReadmeFilename) . '
+{% endblock %}';
+file_put_contents($readmeTemplateFile, $readmeTemplate);
+            }
+        }
+        $finder->files()->in($dir);
 
-        $outputDir =  $input->getOption('output-dir');
         $outputDir = rtrim($outputDir, '/') . '/';
         foreach ($finder as $file) {
             $name = $reader->getContent()['name'];
@@ -65,15 +71,15 @@ class SurvosBuildDocsCommand extends Command
 
             $outputFilename = (($file->getBasename() === 'README.md.twig')
                 ? $this->projectDir
-                : $outputDir) . '/' .
+                : $outputDir)  .
                 $file->getBasename('.twig');
 
             file_put_contents($outputFilename, $rendered);
-            $output->write("$outputFilename written.", true);
+            $io->success("$outputFilename written.", true);
         }
 
-        $io->success("Templates compiled, now run cd $outputDir && make html");
+        $io->success("Templates compiled to " . $outputDir);
 
-        return self::SUCCESS;
+        return Command::SUCCESS;
     }
 }

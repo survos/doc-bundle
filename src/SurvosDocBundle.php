@@ -3,6 +3,7 @@
 namespace Survos\DocBundle;
 
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
+use Survos\DocBundle\Command\UploadCommand;
 use Survos\DocBundle\Controller\ScreenshotController;
 use Survos\DocBundle\EventSubscriber\LoggerSubscriber;
 use Survos\DocBundle\Twig\TwigExtension;
@@ -44,6 +45,12 @@ class SurvosDocBundle extends AbstractBundle
             ->addTag('console.command')
         ;
 
+        $builder->autowire(UploadCommand::class)
+            ->setArgument('$httpClient', new Reference('http_client'))
+            ->setArgument('$projectDir', '%kernel.project_dir%')
+//            ->setArgument('$config', $config)
+            ->addTag('console.command')
+        ;
     }
 
     public function configure(DefinitionConfigurator $definition): void

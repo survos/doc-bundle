@@ -1,8 +1,17 @@
-# {% block title %}{{ title|default('~~') }}{% endblock %}
+# {% block title %}# {{ title|default('~~') }}
 
+{{ composer.description }}
+{% endblock %}
+
+{% block intro %}
+{% endblock %}
 {% block installation %}
 
 ## Installation
+
+@todo: make sure .env has
+DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db"
+
 
 ```bash
 git clone git@github.com:{{ name }} {{ shortName}} && cd {{ shortName }}
@@ -33,9 +42,9 @@ vendor/bin/phpunit
 {% endblock %}
 
 {% block database %}
-## Database
+## Entities
 
-![Database Diagram](assets/db.svg)
+![Database Diagram](assets/docs/database.svg)
 
 {% endblock %}
 

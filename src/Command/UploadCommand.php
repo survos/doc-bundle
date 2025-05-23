@@ -16,6 +16,8 @@ class UploadCommand
     public function __construct(
         private readonly HttpClientInterface                        $httpClient,
         #[Autowire('%kernel.project_dir%')] private readonly string $projectDir,
+        private array $config = [],
+        private ?string $apiEndpoint=null,
     )
     {
     }
@@ -24,10 +26,12 @@ class UploadCommand
     public function __invoke(
         SymfonyStyle                                                      $io,
         #[Argument('path to file or directory')] string                   $path,
-        #[Option(name: 'server-url', description: 'api endpoint')] string $apiEndpoint = 'https://show.survos.com/api/asciicasts',
+        #[Option(name: 'server-url', description: 'api endpoint')] string $apiEndpoint = '',
     ): int
     {
-
+        if (!$apiEndpoint) {
+            $apiEndpoint = $this->config['screenshow_endpoint'];
+        }
         if (!file_exists($path)) {
             $path = $this->projectDir . $path;
         }
@@ -46,6 +50,11 @@ class UploadCommand
         }
 
         $response = $this->httpClient->request('POST', $apiEndpoint, $params);
+        if (($statusCode = $response->getStatusCode()) !== 200) {
+            $io->error("Api endpoint {$apiEndpoint} not reachable: $statusCode");
+        } else {
+            $io->writeln($response->getContent(), JSON_PRETTY_PRINT);
+        }
 
         $io->success(self::class . " success.");
         return Command::SUCCESS;

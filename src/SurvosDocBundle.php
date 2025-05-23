@@ -48,6 +48,7 @@ class SurvosDocBundle extends AbstractBundle
         $builder->autowire(UploadCommand::class)
             ->setArgument('$httpClient', new Reference('http_client'))
             ->setArgument('$projectDir', '%kernel.project_dir%')
+            ->setArgument('$config', $config)
 //            ->setArgument('$config', $config)
             ->addTag('console.command')
         ;
@@ -58,6 +59,7 @@ class SurvosDocBundle extends AbstractBundle
         // since the configuration is short, we can add it here
         $definition->rootNode()
             ->children()
+            ->scalarNode('screenshow_endpoint')->defaultValue('%env(SCREENSHOW_ENDPOINT)%')->end()
             ->scalarNode('user_provider')->defaultValue(null)->end()
             ->scalarNode('user_class')->defaultValue("App\\Entity\\User")->end()
             ->end();

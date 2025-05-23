@@ -37,6 +37,8 @@ class UploadCommand
         }
         $fileHandle = fopen($path, 'r');
         $params = [
+            'verify_peer' => false,
+            'verify_host' => false,
             'body' => ['asciicast' => $fileHandle]
         ];
         if (str_contains($apiEndpoint, '.wip')) {

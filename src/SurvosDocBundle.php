@@ -2,6 +2,7 @@
 
 namespace Survos\DocBundle;
 
+use Survos\DocBundle\Command\ScreenshotCommand;
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
 use Survos\DocBundle\Command\UploadCommand;
 use Survos\DocBundle\Controller\ScreenshotController;
@@ -44,6 +45,9 @@ class SurvosDocBundle extends AbstractBundle
             ->setArgument('$twig', new Reference('twig'))
             ->addTag('console.command')
         ;
+
+        $builder->autowire(ScreenshotCommand::class)
+            ->addTag('console.command');
 
         $builder->autowire(UploadCommand::class)
             ->setArgument('$httpClient', new Reference('http_client'))

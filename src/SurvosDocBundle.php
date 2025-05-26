@@ -63,7 +63,8 @@ class SurvosDocBundle extends AbstractBundle
         // since the configuration is short, we can add it here
         $definition->rootNode()
             ->children()
-            ->scalarNode('screenshow_endpoint')->defaultValue('%env(SCREENSHOW_ENDPOINT)%')->end()
+//            ->scalarNode('screenshow_endpoint')->defaultValue(null)->end()
+            ->scalarNode('screenshow_endpoint')->defaultValue('%env(default::SCREENSHOW_ENDPOINT)%')->end()
             ->scalarNode('user_provider')->defaultValue(null)->end()
             ->scalarNode('user_class')->defaultValue("App\\Entity\\User")->end()
             ->end();

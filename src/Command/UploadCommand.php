@@ -29,6 +29,7 @@ class UploadCommand
         #[Option(name: 'server-url', description: 'api endpoint')] string $apiEndpoint = '',
     ): int
     {
+
         if (!$apiEndpoint) {
             $apiEndpoint = $this->config['screenshow_endpoint'];
         }

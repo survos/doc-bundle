@@ -20,13 +20,13 @@
         "twig/twig": "^3.4",
         "symfony/finder": "^7.3@beta",
         "nadar/php-composer-reader": "^2.1",
-        "jawira/doctrine-diagram-bundle": "^0.8.0"
+        "jawira/doctrine-diagram-bundle": "^1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",
         "behat/behat": "^3.13",
         "friends-of-behat/symfony-extension": "^2.4",
-        "phpunit/phpunit": "^11.4",
+        "phpunit/phpunit": "^12.0",
         "symfony/framework-bundle": "^6.4 || ^7.1",
         "symfony/panther": "^2.2",
         "symfony/routing": "^7.3@beta"

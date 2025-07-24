@@ -10,7 +10,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[AsCommand('doc:upload', 'upload a Asciinema file or directory to shellshow site', aliases: ['upload'])]
+#[AsCommand('doc:upload', 'upload a Asciinema (ciine) file or directory to shellshow site', aliases: ['upload'])]
+// export CIINE_PATH=~/g/sites/showcase/casts/${PWD##*/}/$(date '+%s').cast
+//  ciine rec ~/g/sites/showcase/casts/${PWD##*/}/$(date '+%s')-$$.cast
 class UploadCommand
 {
     public function __construct(

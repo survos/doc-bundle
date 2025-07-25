@@ -1,0 +1,5 @@
+survos_news-api:
+  type: attribute
+  resource:
+    path: '@SurvosNewsApiBundle/src/Controller/'
+    namespace: Survos\NewsApiBundle\Controller

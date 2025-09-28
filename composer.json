@@ -2,7 +2,6 @@
     "name": "survos/doc-bundle",
     "description": "Build Sphinx documentation for a Symfony project, using Twig templates",
     "license": "MIT",
-    "minimum-stability": "beta",
     "authors": [
         {
             "name": "Tac Tacelosky",
@@ -12,22 +11,22 @@
     "type": "symfony-bundle",
     "require": {
         "php": "^8.4",
-        "symfony/config": "^7.1",
+        "symfony/config": "^7.3",
         "symfony/console": "^7.3",
         "symfony/dependency-injection": "^7.3",
         "symfony/http-kernel": "^7.3",
         "symfony/options-resolver": "^7.3",
         "twig/twig": "^3.4",
         "symfony/finder": "^7.3",
-        "nadar/php-composer-reader": "^2.1",
+        "nadar/php-composer-reader": "^2.0",
         "jawira/doctrine-diagram-bundle": "^1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",
         "behat/behat": "^3.13",
         "friends-of-behat/symfony-extension": "^2.4",
-        "phpunit/phpunit": "^12.0",
-        "symfony/framework-bundle": "^7.1",
+        "phpunit/phpunit": "^12",
+        "symfony/framework-bundle": "^7.3",
         "symfony/panther": "^2.2",
         "symfony/routing": "^7.3"
     },
@@ -49,28 +48,5 @@
         "phpunit-coverage-text": "@phpunit-base --coverage-text --colors=never",
         "cs-check": "mkdir -p var/cache && php-cs-fixer fix --dry-run --diff --cache-file=var/cache/.php_cs.cache",
         "cs-fix": "mkdir -p var/cache && php-cs-fixer fix --diff --cache-file=var/cache/.php_cs.cache"
-    },
-    "conflict": {
-        "survos/maker-bundle": "<1.2.57",
-        "survos/html-prettify-bundle": "<1.2.57",
-        "survos/barcode-bundle": "<1.2.57",
-        "survos/api-grid-bundle": "<1.2.57",
-        "survos/bootstrap-bundle": "<1.2.57",
-        "survos/inspection-bundle": "<1.2.57",
-        "survos/faker-bundle": "<1.2.57",
-        "survos/grid-bundle": "<1.2.57",
-        "survos/core-bundle": "<1.2.57",
-        "survos/tree-bundle": "<1.2.57",
-        "survos/auth-bundle": "<1.2.57",
-        "survos/workflow-helper-bundle": "<1.2.57",
-        "survos/crawler-bundle": "<1.2.57",
-        "survos/location-bundle": "<1.2.57",
-        "survos/command-bundle": "<1.2.57",
-        "survos/ruler-bundle": "<1.2.57",
-        "survos/providence-bundle": "<1.2.57",
-        "survos/stripe-product": "<1.2.57",
-        "survos/wiki-bundle": "<1.2.57",
-        "survos/import-bridge": "<1.2.57",
-        "survos/grid-group-bundle": "<1.2.57"
     }
 }

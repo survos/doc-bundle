@@ -11,22 +11,23 @@
     "type": "symfony-bundle",
     "require": {
         "php": "^8.4",
-        "symfony/config": "^7.3||^8.0",
-        "symfony/console": "^7.3||^8.0",
-        "symfony/dependency-injection": "^7.3||^8.0",
-        "symfony/http-kernel": "^7.3||^8.0",
-        "symfony/options-resolver": "^7.3||^8.0",
+        "symfony/config": "^7.4||^8.0",
+        "symfony/console": "^7.4||^8.0",
+        "symfony/dependency-injection": "^7.4||^8.0",
+        "symfony/http-kernel": "^7.4||^8.0",
+        "symfony/options-resolver": "^7.4||^8.0",
         "twig/twig": "^3.4",
-        "symfony/finder": "^7.3||^8.0",
+        "symfony/finder": "^7.4||^8.0",
         "nadar/php-composer-reader": "^2.0",
         "jawira/doctrine-diagram-bundle": "^1.1"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "phpstan/phpstan": "^2.0",
         "behat/behat": "^3.13",
         "friends-of-behat/symfony-extension": "^2.4",
         "phpunit/phpunit": "^12",
-        "symfony/framework-bundle": "^7.3||^8.0",
+        "symfony/framework-bundle": "^7.4||^8.0",
         "symfony/panther": "^2.2",
         "symfony/routing": "^7.3 | ^8.0"
     },
@@ -34,11 +35,6 @@
         "psr-4": {
             "Survos\\DocBundle\\Tests\\": "tests/",
             "Survos\\DocBundle\\": "src/"
-        }
-    },
-    "extra": {
-        "symfony": {
-            "require": "^7.3"
         }
     },
     "scripts": {

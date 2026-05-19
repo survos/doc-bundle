@@ -2,7 +2,7 @@
 
 namespace Survos\DocBundle;
 
-use Survos\CoreBundle\Traits\HasConfigurableRoutes;
+use Survos\Kit\Traits\HasConfigurableRoutes;
 use Survos\DocBundle\Command\ScreenshotCommand;
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
 use Survos\DocBundle\Command\UploadCommand;
@@ -12,9 +12,9 @@ use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Survos\Kit\AbstractSurvosBundle;
 
-class SurvosDocBundle extends AbstractBundle
+class SurvosDocBundle extends AbstractSurvosBundle
 {
     use HasConfigurableRoutes;
 

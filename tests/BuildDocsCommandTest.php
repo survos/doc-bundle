@@ -20,7 +20,7 @@ class BuildDocsCommandTest extends KernelTestCase
 
         $outputDir = __DIR__ . '/test-data/output/';
 
-        $command = $application->find('survos:build-docs');
+        $command = $application->find('doc:build');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'template-dir' => __DIR__ . '/../templates',

@@ -20,10 +20,11 @@
         "symfony/finder": "^8.1",
         "nadar/php-composer-reader": "^2.0",
         "jawira/doctrine-diagram-bundle": "^1.1",
-        "survos/kit-bundle": "^2.5"
+        "survos/kit-bundle": "^2.5",
+        "davidbadura/markdown-builder": "^1.1",
+        "symfony/filesystem": "^8.1"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^13.0",
         "symfony/framework-bundle": "^8.1",
@@ -31,6 +32,9 @@
         "symfony/routing": "^8.1"
     },
     "suggest": {
+        "symfony/workflow": "Required by the doc:workflows command to document registered workflows",
+        "symfony/process": "Lets doc:workflows render .svg diagrams via graphviz \"dot\"",
+        "survos/state-bundle": "Richer doc:workflows diagrams that honor Survos place/transition metadata",
         "behat/behat": "For running the Behat feature tests (no Symfony 8 compatible release yet)",
         "friends-of-behat/symfony-extension": "Symfony integration for Behat (requires behat/behat)"
     },

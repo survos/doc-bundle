@@ -1,0 +1,318 @@
+<?php
+
+namespace Survos\DocBundle\Command;
+
+use DavidBadura\MarkdownBuilder\MarkdownBuilder;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+/**
+ * One self-contained markdown file per console command, plus an index — built so an
+ * agent can grasp the project's commands without scanning the codebase. Filtered by
+ * survos_doc.console.include (namespaces or exact command names; empty means "all").
+ */
+#[AsCommand('doc:commands', 'Generate an agent-friendly markdown reference for available commands')]
+final class DumpAgentDocsCommand
+{
+    /** @var list<string> */
+    private const GLOBAL_OPTION_NAMES = [
+        'help', 'silent', 'quiet', 'verbose', 'version',
+        'ansi', 'no-ansi', 'no-interaction', 'env', 'no-debug', 'profile',
+    ];
+
+    private Application $application;
+
+    /**
+     * @param list<string> $namespaces command namespaces (or exact command names) to document
+     */
+    public function __construct(
+        private KernelInterface $kernel,
+        #[Autowire('%survos_doc.console.include%')]
+        private array $namespaces,
+        private readonly Filesystem $fs,
+        #[Autowire('%kernel.project_dir%')]
+        private string $projectDir,
+    ) {
+        $this->application = new Application($this->kernel);
+    }
+
+    public function __invoke(
+        SymfonyStyle $io,
+        #[Option('Output directory for per-command markdown, relative to project dir unless absolute')]
+        string $outputDir = 'docs/command',
+    ): int {
+        $commands = $this->getAllowedCommands();
+        $dir = Path::makeAbsolute($outputDir, $this->projectDir);
+
+        if ($this->fs->exists($dir)) {
+            $this->fs->remove((new Finder())->files()->in($dir)->depth(0)->name('*.md'));
+        }
+
+        $generatedAt = (new \DateTimeImmutable())->format(DATE_ATOM);
+        foreach ($commands as $command) {
+            $this->fs->dumpFile(
+                $dir . '/' . $this->fileNameFor((string) $command->getName()),
+                $this->renderCommand($command, $generatedAt)
+            );
+        }
+        $this->fs->dumpFile($dir . '/README.md', $this->renderIndex($commands, $generatedAt));
+
+        $io->success(sprintf('%d command files written to %s', count($commands), $dir));
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * Command name to camelCase filename: app:omeka:load-directory -> appOmekaLoadDirectory.md
+     */
+    private function fileNameFor(string $commandName): string
+    {
+        $parts = preg_split('/[:_-]+/', $commandName) ?: [$commandName];
+        $camel = array_shift($parts);
+        foreach ($parts as $part) {
+            $camel .= ucfirst($part);
+        }
+
+        return $camel . '.md';
+    }
+
+    /**
+     * @return array<string, Command>
+     */
+    private function getAllowedCommands(): array
+    {
+        $commands = [];
+        foreach ($this->application->all() as $command) {
+            if (!$this->isAllowed($command)) {
+                continue;
+            }
+            $name = (string) $command->getName();
+            if ($name === '') {
+                continue;
+            }
+            $commands[$name] = $command;
+        }
+        ksort($commands);
+
+        return $commands;
+    }
+
+    private function isAllowed(Command $command): bool
+    {
+        if ($command->isHidden()) {
+            return false;
+        }
+        if (empty($this->namespaces)) {
+            return true;
+        }
+
+        $name = (string) $command->getName();
+        foreach ($this->namespaces as $namespace) {
+            $namespace = (string) $namespace;
+            if ($namespace === '') {
+                continue;
+            }
+            // Match an exact command name ("doctrine:dbal:run") or a namespace prefix ("app").
+            if ($name === $namespace || str_starts_with($name, $namespace . ':')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function renderCommand(Command $command, string $generatedAt): string
+    {
+        $definition = $command->getDefinition();
+        $md = new MarkdownBuilder();
+
+        $md->h1((string) $command->getName());
+        $description = trim((string) $command->getDescription());
+        $md->p($description !== '' ? $description : '_No description provided._');
+        $md->p($md->inlineItalic(sprintf(
+            'Generated by `doc:commands` on `%s`. Standard Symfony global options are omitted.',
+            $generatedAt
+        )));
+
+        $md->h2('Synopsis');
+        $md->code(trim($command->getSynopsis(true)), 'text');
+
+        $md->h2('Arguments');
+        $arguments = $definition->getArguments();
+        if ($arguments === []) {
+            $md->p('_(none)_');
+        } else {
+            $md->bulletedList(array_map($this->formatArgumentLine(...), array_values($arguments)));
+        }
+
+        $md->h2('Options');
+        $options = array_values(array_filter(
+            $definition->getOptions(),
+            fn (InputOption $option): bool => !$this->isGlobalOption($option)
+        ));
+        if ($options === []) {
+            $md->p('_(none)_');
+        } else {
+            usort($options, fn (InputOption $a, InputOption $b): int => strcmp($a->getName(), $b->getName()));
+            $md->bulletedList(array_map($this->formatOptionLine(...), $options));
+        }
+
+        $md->h2('Help');
+        $help = trim((string) $command->getHelp());
+        if ($help === '') {
+            $md->p('_No additional help provided._');
+        } else {
+            $md->code($help, 'text');
+        }
+
+        return $md->getMarkdown();
+    }
+
+    /**
+     * @param array<string, Command> $commands
+     */
+    private function renderIndex(array $commands, string $generatedAt): string
+    {
+        $md = new MarkdownBuilder();
+        $md->h1('Command Reference');
+        $md->p($md->inlineItalic(sprintf(
+            'Generated by `doc:commands` on `%s`. One file per command; standard Symfony global options are omitted.',
+            $generatedAt
+        )));
+
+        $items = [];
+        foreach ($commands as $command) {
+            $name = (string) $command->getName();
+            $link = $md->inlineLink($this->fileNameFor($name), $md->inlineCode($name));
+            $description = trim((string) $command->getDescription());
+            $items[] = $description !== '' ? $link . ' — ' . $description : $link;
+        }
+        $md->bulletedList($items);
+
+        return $md->getMarkdown();
+    }
+
+    private function isGlobalOption(InputOption $option): bool
+    {
+        return in_array($option->getName(), self::GLOBAL_OPTION_NAMES, true);
+    }
+
+    private function formatArgumentLine(InputArgument $argument): string
+    {
+        $parts = [$argument->isRequired() ? 'required' : 'optional'];
+        if ($argument->isArray()) {
+            $parts[] = 'repeatable';
+        }
+
+        $line = sprintf('`%s` (%s)', $argument->getName(), implode(', ', $parts));
+        $description = trim((string) $argument->getDescription());
+        if ($description !== '') {
+            $line .= ' — ' . $description;
+        }
+        if ($this->hasArgumentDefault($argument)) {
+            $line .= sprintf(' (default: `%s`)', $this->formatValue($argument->getDefault()));
+        }
+
+        return $line;
+    }
+
+    private function formatOptionLine(InputOption $option): string
+    {
+        // Value-ness is encoded in the signature (=<value> required, =<?value> optional,
+        // no "=" means a boolean flag), so it isn't repeated here.
+        $parts = [];
+        if ($option->isArray()) {
+            $parts[] = 'repeatable';
+        }
+        if ($option->isNegatable()) {
+            $parts[] = 'negatable';
+        }
+
+        $signature = $this->formatOptionSignature($option);
+        $line = $parts === []
+            ? sprintf('`%s`', $signature)
+            : sprintf('`%s` (%s)', $signature, implode(', ', $parts));
+        $description = trim((string) $option->getDescription());
+        if ($description !== '') {
+            $line .= ' — ' . $description;
+        }
+        if ($this->hasOptionDefault($option)) {
+            $line .= sprintf(' (default: `%s`)', $this->formatValue($option->getDefault()));
+        }
+
+        return $line;
+    }
+
+    private function formatOptionSignature(InputOption $option): string
+    {
+        $tokens = [];
+        $shortcut = $option->getShortcut();
+        if ($shortcut !== null && $shortcut !== '') {
+            foreach (explode('|', $shortcut) as $short) {
+                $tokens[] = '-' . $short;
+            }
+        }
+
+        $long = '--' . $option->getName();
+        if ($option->isNegatable()) {
+            $long .= '/--no-' . $option->getName();
+        }
+        if ($option->acceptValue()) {
+            // <value> = value required, <?value> = value optional.
+            $long .= $option->isValueRequired() ? '=<value>' : '=<?value>';
+            if ($option->isArray()) {
+                $long .= '...';
+            }
+        }
+        $tokens[] = $long;
+
+        return implode(', ', $tokens);
+    }
+
+    private function hasArgumentDefault(InputArgument $argument): bool
+    {
+        $default = $argument->getDefault();
+
+        return !($default === null || $default === '' || $default === []);
+    }
+
+    private function hasOptionDefault(InputOption $option): bool
+    {
+        $default = $option->getDefault();
+        if ($default === null || $default === '' || $default === []) {
+            return false;
+        }
+
+        return !(!$option->acceptValue() && $default === false);
+    }
+
+    private function formatValue(mixed $value): string
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+        if (is_array($value)) {
+            $json = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+            return $json === false ? '[]' : $json;
+        }
+        if ($value === null) {
+            return 'null';
+        }
+        if ($value === '') {
+            return "''";
+        }
+
+        return (string) $value;
+    }
+}

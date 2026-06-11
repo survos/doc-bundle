@@ -14,7 +14,7 @@ use Twig\Environment;
 use function Symfony\Component\String\u;
 
 #[AsCommand(
-    name: 'survos:build-docs',
+    name: 'doc:build',
     description: 'Compile .rst.twig files',
 )]
 class SurvosBuildDocsCommand
@@ -31,7 +31,7 @@ class SurvosBuildDocsCommand
         SymfonyStyle $io,
         #[Argument(description: "template dir")] string $templateDir = 'templates/',
         #[Argument(description: "doc template dir within templates")] string $subdir = 'docs/',
-        #[Option] string $outputDir='./doc',
+        #[Option] string $outputDir='./docs',
     ): int
     {
         $reader = new ComposerReader($this->projectDir . 'composer.json');

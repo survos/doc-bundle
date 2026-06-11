@@ -85,7 +85,7 @@ cat tutorial.rst.twig
 
 
 ```bash
-bin/console survos:build-docs
+bin/console doc:build
 cd docs
 make html
 ```

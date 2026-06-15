@@ -20,6 +20,7 @@
         "symfony/finder": "^8.1",
         "nadar/php-composer-reader": "^2.0",
         "jawira/doctrine-diagram-bundle": "^1.1",
+        "jawira/doctrine-diagram-contracts": "^1 || ^2",
         "survos/kit-bundle": "^2.5",
         "davidbadura/markdown-builder": "^1.1",
         "symfony/filesystem": "^8.1"

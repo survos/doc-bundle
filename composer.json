@@ -19,8 +19,6 @@
         "twig/twig": "^3.4",
         "symfony/finder": "^8.1",
         "nadar/php-composer-reader": "^2.0",
-        "jawira/doctrine-diagram-bundle": "^2.0",
-        "jawira/doctrine-diagram-contracts": "^2.0",
         "survos/kit-bundle": "^2.5",
         "davidbadura/markdown-builder": "^1.1",
         "symfony/filesystem": "^8.1"
@@ -30,7 +28,9 @@
         "phpunit/phpunit": "^13.0",
         "symfony/framework-bundle": "^8.1",
         "symfony/panther": "^2.2",
-        "symfony/routing": "^8.1"
+        "symfony/routing": "^8.1",
+        "doctrine/orm": "^3.0",
+        "jawira/doctrine-diagram-bundle": "^2.0"
     },
     "suggest": {
         "symfony/workflow": "Required by the doc:workflows command to document registered workflows",

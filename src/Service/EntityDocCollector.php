@@ -12,8 +12,7 @@ use Survos\FieldBundle\Registry\EntityMetaRegistry;
  * When field-bundle's EntityMetaRegistry is available (it almost always is) it
  * drives the curated, described entity list; Doctrine supplies field/relation
  * structure. Without it, we fall back to Doctrine's full metadata enriched by
- * reflecting #[EntityMeta] directly. doctrine/orm is always present here (a
- * transitive requirement of jawira/doctrine-diagram-bundle).
+ * reflecting #[EntityMeta] directly when Doctrine ORM is installed in the host app.
  */
 final class EntityDocCollector
 {

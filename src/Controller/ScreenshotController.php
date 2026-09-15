@@ -17,7 +17,10 @@ final class ScreenshotController extends AbstractController
     #[Template('app/screenshots.html.twig')]
     public function index(): array
     {
-        $reflection = new \ReflectionClass(PantherTest::class);
+        // The screenshots come from the app's own Panther test; an app without one has none to show.
+        if (!class_exists(PantherTest::class)) {
+            throw $this->createNotFoundException('No App\\Tests\\PantherTest, so there are no screenshots.');
+        }
         $methods = [];
         $classInfo = (new BetterReflection())
             ->reflector()

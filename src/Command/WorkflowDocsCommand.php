@@ -42,7 +42,9 @@ final class WorkflowDocsCommand
     public function __construct(
         #[AutowireIterator('workflow')]
         private readonly iterable $workflows,
-        private readonly EventDispatcherInterface $dispatcher,
+        // Needs getListeners(), which only the Component interface has; inject it by id, since the
+        // Component\EventDispatcherInterface autowiring alias is deprecated in Symfony 8.2.
+        #[Autowire(service: 'event_dispatcher')] private readonly EventDispatcherInterface $dispatcher,
         private readonly Filesystem $fs,
         #[Autowire('%kernel.project_dir%')]
         private readonly string $projectDir,

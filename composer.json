@@ -29,7 +29,7 @@
         "symfony/framework-bundle": "^8.1",
         "symfony/panther": "^2.2",
         "symfony/routing": "^8.1",
-        "doctrine/orm": "^3.0",
+        "doctrine/orm": "^3.7",
         "jawira/doctrine-diagram-bundle": "^2.0"
     },
     "suggest": {

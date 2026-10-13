@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +29,7 @@ class SurvosDocBundle extends AbstractSurvosBundle
         $this->addRouteOptions($children, '/doc');
         $children
             ->scalarNode('user_provider')->defaultValue(null)->end()
-            ->scalarNode('user_class')->defaultValue("App\\Entity\\User")->end()
+            ->scalarNode('user_class')->defaultValue('App\\Entity\\User')->end()
             // What to document. Each section names the namespaces (or exact command/workflow
             // names) to include; an empty include list means "all". More sections (workflow,
             // …) will be added here as doc-bundle grows.
@@ -42,9 +44,6 @@ class SurvosDocBundle extends AbstractSurvosBundle
         ->end();
     }
 
-    /**
-     * @param array<mixed> $config
-     */
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);

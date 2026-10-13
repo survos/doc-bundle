@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +38,7 @@ final class EntityDocCollector
      */
     public function collect(): array
     {
-        if ($this->em === null) {
+        if (null === $this->em) {
             return []; // no EntityManager service (app without Doctrine)
         }
 
@@ -149,7 +151,7 @@ final class EntityDocCollector
     private function meta(string $class): array
     {
         $descriptor = $this->registry?->get($class);
-        if ($descriptor !== null) {
+        if (null !== $descriptor) {
             return [
                 'label' => $descriptor->label ?: null,
                 'description' => $descriptor->description,
@@ -181,7 +183,7 @@ final class EntityDocCollector
             return [];
         }
         $attributes = (new \ReflectionClass($class))->getAttributes(self::ENTITY_META_ATTRIBUTE);
-        if ($attributes === []) {
+        if ([] === $attributes) {
             return [];
         }
         $meta = $attributes[0]->newInstance();
@@ -198,7 +200,7 @@ final class EntityDocCollector
         $pair = [$from, $to];
         sort($pair);
 
-        return $pair[0] . '|' . $pair[1] . '|' . $name;
+        return $pair[0].'|'.$pair[1].'|'.$name;
     }
 
     private function mermaidType(string $type): string
@@ -211,6 +213,6 @@ final class EntityDocCollector
     {
         $pos = strrpos($class, '\\');
 
-        return $pos === false ? $class : substr($class, $pos + 1);
+        return false === $pos ? $class : substr($class, $pos + 1);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Tests;
 
 use Survos\DocBundle\Command\DumpAgentDocsCommand;
@@ -42,6 +44,6 @@ class TestKernel extends BaseKernel
 
     public function getProjectDir(): string
     {
-        return __DIR__ . '/project-dir';
+        return __DIR__.'/project-dir';
     }
 }

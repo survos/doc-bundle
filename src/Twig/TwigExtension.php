@@ -1,33 +1,27 @@
 <?php
 
-/*
- *
- */
+declare(strict_types=1);
 
 namespace Survos\DocBundle\Twig;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
-use function Symfony\Component\String\u;
 
 /**
- * Multiple Twig extensions: filters and functions
+ * Multiple Twig extensions: filters and functions.
  */
 class TwigExtension extends AbstractExtension
 {
     public function __construct(
-        private array $config
+        private array $config,
     ) {
     }
-
 
     public function getFilters(): array
     {
         return [
         ];
     }
-
 
     public function getFunctions(): array
     {
@@ -48,11 +42,12 @@ class TwigExtension extends AbstractExtension
          *
          */
         $levels = [null, '-', '^', '=', '*', '"'];
+
         return sprintf("%s\n%s\n\n", $text, str_repeat($levels[$level], mb_strlen($text)));
     }
 
     /**
-     * add icon and sets target
+     * add icon and sets target.
      */
     public function formatExternalLink(string $url, $class = ''): string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Command;
 
 use DavidBadura\MarkdownBuilder\MarkdownBuilder;
@@ -36,7 +38,7 @@ final class EntityDocsCommand
         string $outputDir = 'docs/entity',
     ): int {
         $entities = $this->collector->collect();
-        if ($entities === []) {
+        if ([] === $entities) {
             $io->warning('No entities found.');
 
             return Command::SUCCESS;
@@ -49,9 +51,9 @@ final class EntityDocsCommand
 
         $generatedAt = (new \DateTimeImmutable())->format(DATE_ATOM);
         foreach ($entities as $entity) {
-            $this->fs->dumpFile($dir . '/' . $entity['short'] . '.md', $this->renderEntity($entity, $generatedAt));
+            $this->fs->dumpFile($dir.'/'.$entity['short'].'.md', $this->renderEntity($entity, $generatedAt));
         }
-        $this->fs->dumpFile($dir . '/README.md', $this->renderIndex($entities, $generatedAt));
+        $this->fs->dumpFile($dir.'/README.md', $this->renderIndex($entities, $generatedAt));
 
         $io->success(sprintf('%d entity file(s) written to %s', count($entities), $dir));
 
@@ -66,9 +68,9 @@ final class EntityDocsCommand
         $md = new MarkdownBuilder();
         $md->h1($entity['short']);
 
-        if (is_string($entity['description']) && $entity['description'] !== '') {
+        if (is_string($entity['description']) && '' !== $entity['description']) {
             $md->p($entity['description']);
-        } elseif (is_string($entity['label']) && $entity['label'] !== '') {
+        } elseif (is_string($entity['label']) && '' !== $entity['label']) {
             $md->p($entity['label']);
         }
 
@@ -80,8 +82,8 @@ final class EntityDocsCommand
         )));
 
         $facts = [];
-        if (is_string($entity['group']) && $entity['group'] !== '') {
-            $facts[] = 'group ' . $md->inlineCode($entity['group']);
+        if (is_string($entity['group']) && '' !== $entity['group']) {
+            $facts[] = 'group '.$md->inlineCode($entity['group']);
         }
         if ($entity['api']) {
             $facts[] = 'API Platform';
@@ -89,7 +91,7 @@ final class EntityDocsCommand
         if ($entity['meili']) {
             $facts[] = 'Meilisearch';
         }
-        if ($facts !== []) {
+        if ([] !== $facts) {
             $md->p(implode(' · ', $facts));
         }
 
@@ -97,14 +99,14 @@ final class EntityDocsCommand
         $rows = [];
         foreach ($entity['fields'] as $field) {
             $rows[] = [
-                $md->inlineCode($field['name']) . ($field['pk'] ? ' (PK)' : ''),
+                $md->inlineCode($field['name']).($field['pk'] ? ' (PK)' : ''),
                 $md->inlineCode($field['type']),
                 $field['nullable'] ? 'yes' : 'no',
             ];
         }
         $md->table(['Field', 'Type', 'Nullable'], $rows)->br();
 
-        if ($entity['relations'] !== []) {
+        if ([] !== $entity['relations']) {
             $md->h2('Relations');
             $items = [];
             foreach ($entity['relations'] as $relation) {
@@ -136,10 +138,10 @@ final class EntityDocsCommand
         $md->h2('Entities');
         $items = [];
         foreach ($entities as $entity) {
-            $line = $md->inlineLink($entity['short'] . '.md', $md->inlineCode($entity['short']));
+            $line = $md->inlineLink($entity['short'].'.md', $md->inlineCode($entity['short']));
             $summary = $entity['description'] ?? $entity['label'];
-            if (is_string($summary) && $summary !== '') {
-                $line .= ' — ' . $summary;
+            if (is_string($summary) && '' !== $summary) {
+                $line .= ' — '.$summary;
             }
             $items[] = $line;
         }

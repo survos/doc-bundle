@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -13,9 +15,9 @@ class DumpAgentDocsCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         $application = new Application($kernel);
 
-        $dir = __DIR__ . '/project-dir/docs/command';
-        $ownFile = $dir . '/docCommands.md';
-        $index = $dir . '/README.md';
+        $dir = __DIR__.'/project-dir/docs/command';
+        $ownFile = $dir.'/docCommands.md';
+        $index = $dir.'/README.md';
 
         $command = $application->find('doc:commands');
         $commandTester = new CommandTester($command);

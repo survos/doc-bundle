@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Tests;
 
 use Survos\DocBundle\Command\SurvosBuildDocsCommand;
@@ -18,14 +20,14 @@ class BuildDocsCommandTest extends KernelTestCase
         $application = new Application($kernel);
         $application->add(new SurvosBuildDocsCommand($twigEnv, []));
 
-        $outputDir = __DIR__ . '/test-data/output/';
+        $outputDir = __DIR__.'/test-data/output/';
 
         $command = $application->find('doc:build');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'template-dir' => __DIR__ . '/../templates',
+            'template-dir' => __DIR__.'/../templates',
             'template-subdir' => '',
-            '--output-dir' => $outputDir
+            '--output-dir' => $outputDir,
         ]);
 
         $commandTester->assertCommandIsSuccessful();

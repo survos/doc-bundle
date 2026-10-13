@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\DocBundle\Controller;
 
 use App\Tests\PantherTest;
+use PhpParser\Error;
+use PhpParser\ParserFactory;
 use Roave\BetterReflection\BetterReflection;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use PhpParser\Error;
-use PhpParser\ParserFactory;
 
 final class ScreenshotController extends AbstractController
 {
@@ -39,10 +41,11 @@ final class ScreenshotController extends AbstractController
                 }
                 $methods[$method->getName()][] = [
                     'content' => $statement,
-                    'url' => $url
+                    'url' => $url,
                 ];
             }
         }
+
         return [
             'methods' => $methods,
         ];
@@ -68,6 +71,7 @@ final class ScreenshotController extends AbstractController
             echo 'Parse Error: ', $e->getMessage(), "\n";
         }
         dd();
+
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/ScreenshotController.php',

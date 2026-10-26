@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Survos\DocBundle\Command;
 
-use Playwright\Playwright;
+use Playwright\Configuration\PlaywrightConfigBuilder;
+use Playwright\PlaywrightFactory;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -26,6 +27,7 @@ final class ScreenshotCommand
         #[Argument] string $screenshotPath = '',
         #[Option(description: 'use .wip sites')] bool $dev = false,
         #[Option(description: 'local directory')] string $dir = 'public/casts/',
+        #[Option(description: 'Browser: chrome (your installed Google Chrome) or chromium (Playwright\'s own download)')] string $channel = 'chrome',
     ): int {
         if (!$screenshotPath) {
             $screenshotPath = (new \DateTime('now'))->format('Y-m-d-H-i-s');
@@ -37,26 +39,36 @@ final class ScreenshotCommand
 
         $io->warning($url);
 
-        if (!class_exists(Playwright::class)) {
-            $io->error('Screenshots need playwright-php/playwright: composer require --dev playwright-php/playwright && vendor/bin/playwright-install chromium');
+        if (!class_exists(PlaywrightFactory::class)) {
+            $io->error('Screenshots need playwright-php/playwright: composer require --dev playwright-php/playwright (it drives your installed Google Chrome; --channel=chromium needs vendor/bin/playwright-install chromium)');
 
             return Command::FAILURE;
         }
 
-        // Real Chromium through Playwright. The Symfony local proxy is only needed for .wip hosts (it serves their
-        // local TLS certificate, hence ignoreHTTPSErrors); any other URL goes straight out.
-        $options = ['headless' => true, 'ignoreHTTPSErrors' => true];
-        if (str_ends_with((string) parse_url($url, \PHP_URL_HOST), '.wip')) {
-            $options['proxy'] = ['server' => 'http://127.0.0.1:7080'];
+        // Chrome through Playwright: your installed Google Chrome by default (--channel=chromium for Playwright's own
+        // download). The Symfony local proxy is only needed for .wip hosts (it serves their local TLS certificate, hence
+        // ignoreHTTPSErrors); any other URL goes straight out.
+        $config = PlaywrightConfigBuilder::create()->withHeadless(true);
+        if ('chromium' !== $channel) {
+            $config->withChannel($channel);
         }
-        $context = Playwright::chromium($options);
+        if (str_ends_with((string) parse_url($url, \PHP_URL_HOST), '.wip')) {
+            $config->withProxy('http://127.0.0.1:7080');
+        }
         try {
-            $page = $context->newPage();
-            $page->setViewportSize(1500, 4000);
-            $page->goto($url);
-            $page->screenshot($screenshotPath);
-        } finally {
-            $context->close();
+            $playwright = PlaywrightFactory::create($config->build()); // keep it alive: dropping it stops the Node server
+            $browser = $playwright->chromium()->launch();
+            try {
+                $page = $browser->newContext(['ignoreHTTPSErrors' => true, 'viewport' => ['width' => 1500, 'height' => 4000]])->newPage();
+                $page->goto($url);
+                $page->screenshot($screenshotPath);
+            } finally {
+                $browser->close();
+            }
+        } catch (\Throwable $e) {
+            $io->error(sprintf("Could not take the screenshot (browser channel '%s'): %s\nInstall Google Chrome, or use --channel=chromium after: vendor/bin/playwright-install chromium", $channel, $e->getMessage()));
+
+            return Command::FAILURE;
         }
         $base = '';
         $link = $screenshotPath;

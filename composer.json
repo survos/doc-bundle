@@ -38,7 +38,7 @@
         "survos/state-bundle": "Richer doc:workflows diagrams that honor Survos place/transition metadata",
         "behat/behat": "For running the Behat feature tests (no Symfony 8 compatible release yet)",
         "friends-of-behat/symfony-extension": "Symfony integration for Behat (requires behat/behat)",
-        "playwright-php/playwright": "Needed by doc:screenshot (also run vendor/bin/playwright-install chromium)"
+        "playwright-php/playwright": "Needed by doc:screenshot; drives your installed Google Chrome (needs Node 20+)"
     },
     "autoload": {
         "psr-4": {

@@ -62,14 +62,17 @@ enriches the diagrams with Survos place/transition metadata when installed.
 
 ### `doc:screenshot`
 
-Takes a screenshot of a given URL with headless Chromium via
+Takes a screenshot of a given URL with headless Chrome via
 [playwright-php/playwright](https://github.com/playwright-php/playwright) and saves it to disk. `.wip` hosts go
-through the Symfony local proxy; other URLs go straight out. It needs Node 20+ and a one-time browser download:
+through the Symfony local proxy; other URLs go straight out. It drives your installed Google Chrome, so there is no
+browser to download and no chromedriver to match; it needs Node 20+.
 
 ```bash
 composer require --dev playwright-php/playwright
-vendor/bin/playwright-install chromium
 ```
+
+On a machine without Chrome, use `--channel=chromium` after `vendor/bin/playwright-install chromium` (a one-time
+download of about 570 MB).
 
 ```bash
 bin/console doc:screenshot https://example.wip my-screenshot --dir=public/casts/

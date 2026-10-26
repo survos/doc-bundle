@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Survos\DocBundle\Command;
 
+use Playwright\Playwright;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsCommand('doc:screenshot', 'take screenshot')]
@@ -35,22 +35,29 @@ final class ScreenshotCommand
         }
         $screenshotPath = $dir.$screenshotPath.'.png';
 
-        //        dump($_SERVER, $this->urlGenerator->generate('#'));
-        // of interest: https_proxy=$(symfony proxy:url) curl https://my-domain.wip
-        //        $client = Client::createChromeClient();
-        $client = Client::createChromeClient(
-            null,
-            [
-                '--window-size=1500,4000',
-                '--proxy-server=http://127.0.0.1:7080',
-            ]
-        );
-        // let s use firefox
-        // $client = Client::createFirefoxClient();
-        $host = parse_url($url, PHP_URL_HOST);
         $io->warning($url);
-        $client->request('GET', $url);
-        $client->takeScreenshot($screenshotPath);
+
+        if (!class_exists(Playwright::class)) {
+            $io->error('Screenshots need playwright-php/playwright: composer require --dev playwright-php/playwright && vendor/bin/playwright-install chromium');
+
+            return Command::FAILURE;
+        }
+
+        // Real Chromium through Playwright. The Symfony local proxy is only needed for .wip hosts (it serves their
+        // local TLS certificate, hence ignoreHTTPSErrors); any other URL goes straight out.
+        $options = ['headless' => true, 'ignoreHTTPSErrors' => true];
+        if (str_ends_with((string) parse_url($url, \PHP_URL_HOST), '.wip')) {
+            $options['proxy'] = ['server' => 'http://127.0.0.1:7080'];
+        }
+        $context = Playwright::chromium($options);
+        try {
+            $page = $context->newPage();
+            $page->setViewportSize(1500, 4000);
+            $page->goto($url);
+            $page->screenshot($screenshotPath);
+        } finally {
+            $context->close();
+        }
         $base = '';
         $link = $screenshotPath;
         //        $signUpPage = $this->urlGenerator->generate('sign_up');

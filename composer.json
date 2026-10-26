@@ -27,17 +27,18 @@
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^13.0",
         "symfony/framework-bundle": "^8.1",
-        "symfony/panther": "^2.2",
         "symfony/routing": "^8.1",
         "doctrine/orm": "^3.7",
-        "jawira/doctrine-diagram-bundle": "^2.0"
+        "jawira/doctrine-diagram-bundle": "^2.0",
+        "playwright-php/playwright": "^1.5"
     },
     "suggest": {
         "symfony/workflow": "Required by the doc:workflows command to document registered workflows",
         "symfony/process": "Lets doc:workflows render .svg diagrams via graphviz \"dot\"",
         "survos/state-bundle": "Richer doc:workflows diagrams that honor Survos place/transition metadata",
         "behat/behat": "For running the Behat feature tests (no Symfony 8 compatible release yet)",
-        "friends-of-behat/symfony-extension": "Symfony integration for Behat (requires behat/behat)"
+        "friends-of-behat/symfony-extension": "Symfony integration for Behat (requires behat/behat)",
+        "playwright-php/playwright": "Needed by doc:screenshot (also run vendor/bin/playwright-install chromium)"
     },
     "autoload": {
         "psr-4": {

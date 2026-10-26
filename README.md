@@ -2,7 +2,7 @@
 
 Generates documentation for a Symfony project. Its primary use today is producing
 **agent-friendly Markdown** references — one file per command/entity/workflow, meant to be
-read by an AI agent (or a human) without scanning the codebase. It also ships a Panther-based
+read by an AI agent (or a human) without scanning the codebase. It also ships a Playwright-based
 screenshot command, and an older Sphinx/RST build command (see the note at the end).
 
 ## Installation
@@ -62,8 +62,14 @@ enriches the diagrams with Survos place/transition metadata when installed.
 
 ### `doc:screenshot`
 
-Takes a screenshot of a given URL via Symfony Panther (headless Chrome through the local
-Symfony proxy) and saves it to disk.
+Takes a screenshot of a given URL with headless Chromium via
+[playwright-php/playwright](https://github.com/playwright-php/playwright) and saves it to disk. `.wip` hosts go
+through the Symfony local proxy; other URLs go straight out. It needs Node 20+ and a one-time browser download:
+
+```bash
+composer require --dev playwright-php/playwright
+vendor/bin/playwright-install chromium
+```
 
 ```bash
 bin/console doc:screenshot https://example.wip my-screenshot --dir=public/casts/
